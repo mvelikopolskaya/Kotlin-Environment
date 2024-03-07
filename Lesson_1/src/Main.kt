@@ -15,15 +15,12 @@ fun phoneBook() {
         when (choice) {
             "1" -> {
                 addPhoneContact()
-                phoneBook()
             }
             "2" -> {
                 addEmailContact()
-                phoneBook()
             }
             "3" -> {
                 help()
-                phoneBook()
             }
             "4" -> {
                 flag = false;
