@@ -8,6 +8,7 @@ class Console : Command {
             println("Enter your command:")
             println("Add phone" +
                     "\nAdd email" +
+                    "\nFind" +
                     "\nShow" +
                     "\nHelp" +
                     "\nExit"
@@ -25,6 +26,7 @@ class Console : Command {
         when (commandString) {
             "add phone" -> command = AddPhoneContact
             "add email" -> command = AddEmailContact
+            "find" -> command = Find
             "help" -> command = Help
             "exit" -> command = Exit
             "show" -> command = Show

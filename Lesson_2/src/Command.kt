@@ -1,4 +1,3 @@
-import org.intellij.lang.annotations.Pattern
 import kotlin.system.exitProcess
 
 sealed interface Command {
@@ -31,16 +30,17 @@ sealed interface Command {
         override fun execute(phonebook: Phonebook): String {
             var email: String
             var flag: Boolean
-            val name = AddName.execute(phonebook)
+            var name = AddName.execute(phonebook)
             val person : Person? = phonebook.findByName(name)
             do {
                 print("Insert contact e-mail: ")
                 email = readln()
                 flag = isValid(email)
                 if (person != null) {
-                    person.email = email
+                    person.emailList.add(email)
+                    phonebook.addPerson(person.name, person.phoneNumbers, person.emailList)
                 }
-                phonebook.addPerson(name, person?.phone, email)
+                phonebook.addPerson(name, mutableSetOf(), mutableSetOf(email))
                 if (!flag) Help.execute(phonebook)
             } while (!flag)
             println("E-mail: $email")
@@ -63,9 +63,10 @@ sealed interface Command {
                     phoneNumber = readln()
                     flag = isValid(phoneNumber)
                     if (person != null) {
-                        person.phone = phoneNumber
+                        person.phoneNumbers.add(phoneNumber)
+                        phonebook.addPerson(person.name, person.phoneNumbers, person.emailList)
                     }
-                    phonebook.addPerson(name, phoneNumber, person?.email)
+                    phonebook.addPerson(name, mutableSetOf(phoneNumber), mutableSetOf())
                     if (!flag) Help.execute(phonebook)
                 } while (!flag)
             println("Phone: $phoneNumber")
@@ -80,9 +81,25 @@ sealed interface Command {
         }
     }
 
+    data object Find : Command {
+        override fun execute(phonebook: Phonebook): String {
+            println("Enter required person's phone number or e-mail")
+            val personData = readln()
+            if(phonebook.isNotEmpty()){
+                if(personData.startsWith("+")) println(phonebook.findByPhoneNumber(personData))
+                else if (personData.contains("@")) println(phonebook.findByEmail(personData))
+                else println("Wrong data")
+            }
+            else println("Not initialized")
+            return ""
+        }
+    }
+
     data object Show : Command {
         override fun execute(phonebook: Phonebook): String {
-            if(phonebook.isNotEmpty()) println(phonebook.show())
+            println("Enter required person's name")
+            val personName = readln()
+            if(phonebook.isNotEmpty()) println(phonebook.show(personName).toString())
             else println("Not initialized")
             return ""
         }

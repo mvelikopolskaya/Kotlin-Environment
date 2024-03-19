@@ -1,18 +1,35 @@
 class Phonebook {
-    private var phonebook = ArrayList<Person>()
+    private var phonebook : MutableSet<Person> = mutableSetOf()
 
-    fun addPerson(name : String, phone : String?, email : String?){
-        val person = Person(name, phone, email)
+    fun addPerson(name: String, phoneNumbers: MutableSet<String>, emailList: MutableSet<String>){
+        val person = Person(name, phoneNumbers, emailList)
         phonebook.add(person)
     }
 
-    fun show() : Person {
-        return phonebook.last()
+    fun show(name : String) : Person? {
+        val person = findByName(name)
+        return person
     }
 
     fun findByName(name: String): Person?{
-        for (person: Person in phonebook){
-            if(person.name.equals(name))
+        phonebook.forEach { person: Person ->
+            if(person.name == name)
+                return person
+        }
+        return null
+    }
+
+    fun findByPhoneNumber(phone: String): Person?{
+        phonebook.forEach{person: Person ->
+            if(person.phoneNumbers.contains(phone))
+                return person
+        }
+        return null
+    }
+
+    fun findByEmail(email: String): Person?{
+        phonebook.forEach{person: Person ->
+            if(person.emailList.contains(email))
                 return person
         }
         return null
