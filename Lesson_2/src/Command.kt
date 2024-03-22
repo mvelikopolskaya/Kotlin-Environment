@@ -24,7 +24,7 @@ sealed interface Command {
 
     data object AddEmailContact : Command {
         override fun isValid(text: String): Boolean {
-            val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\."
+            val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[a-z]+$"
             return text.matches(emailRegex.toRegex())
         }
 
