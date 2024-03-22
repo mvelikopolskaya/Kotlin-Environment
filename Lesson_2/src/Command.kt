@@ -23,7 +23,7 @@ sealed interface Command {
 
     data object AddEmailContact : Command {
         override fun isValid(text: String): Boolean {
-            val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\."
+            val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[a-z]+$"
             return text.matches(emailRegex.toRegex())
         }
 
@@ -36,13 +36,11 @@ sealed interface Command {
                 print("Insert contact e-mail: ")
                 email = readln()
                 flag = isValid(email)
-                if (person != null) {
-                    person.emailList.add(email)
-                    phonebook.addPerson(person.name, person.phoneNumbers, person.emailList)
-                }
-                phonebook.addPerson(name, mutableSetOf(), mutableSetOf(email))
                 if (!flag) Help.execute(phonebook)
             } while (!flag)
+            if (person != null) {
+                person.emailList.add(email)
+            } else phonebook.addPerson(name, mutableSetOf(), mutableSetOf(email))
             println("E-mail: $email")
             return email
         }
@@ -58,17 +56,15 @@ sealed interface Command {
             var flag: Boolean
             val name = AddName.execute(phonebook)
             val person : Person? = phonebook.findByName(name)
-                do {
-                    print("Insert contact phone number: ")
-                    phoneNumber = readln()
-                    flag = isValid(phoneNumber)
-                    if (person != null) {
-                        person.phoneNumbers.add(phoneNumber)
-                        phonebook.addPerson(person.name, person.phoneNumbers, person.emailList)
-                    }
-                    phonebook.addPerson(name, mutableSetOf(phoneNumber), mutableSetOf())
-                    if (!flag) Help.execute(phonebook)
-                } while (!flag)
+            do {
+                print("Insert contact phone number: ")
+                phoneNumber = readln()
+                flag = isValid(phoneNumber)
+                if (!flag) Help.execute(phonebook)
+            } while (!flag)
+            if (person != null) {
+                person.phoneNumbers.add(phoneNumber)
+            } else phonebook.addPerson(name, mutableSetOf(phoneNumber), mutableSetOf())
             println("Phone: $phoneNumber")
             return phoneNumber
         }
