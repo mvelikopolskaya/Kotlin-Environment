@@ -21,6 +21,9 @@ sealed interface Command {
             println("To choose command: "
                     + "\nType \"Add phone\" to add contact name and phone number. Phone number must have look like \"+xxx\""
                     + "\nType \"Add email\" to add contact name and e-mail. Email must have look like \"name@mail.domain\""
+                    + "\nType \"Find\" to find contact info by phone number or e-mail"
+                    + "\nType \"Show\" to show a contact info"
+                    + "\nType \"Export\" to export phonebook to json file"
                     + "\nType \"Exit\"for exit"
                     )
         }
